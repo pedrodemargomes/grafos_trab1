@@ -1,5 +1,22 @@
  graph graphname {
-     C1 -- P1
+     C1 [tipo="c"] 
+     C2 [tipo="c"]
+     C3 [tipo="c"]
+     C4 [tipo="c"]
+     C5 [tipo="c"]
+     C6 [tipo="c"]
+     C7 [tipo="c"]
+     C8 [tipo="c"]
+     C9 [tipo="c"]
+
+     P1 [tipo="p"]
+     P2 [tipo="p"]
+     P3 [tipo="p"]
+     P4 [tipo="p"]
+     P5 [tipo="p"]
+     P6 [tipo="p"]
+
+	 C1 -- P1
      C2 -- P2
      C3 -- P1
      C4 -- P3
@@ -9,4 +26,5 @@
      C7 -- P4
      C8 -- P6
      C9 -- P1
+     C9 -- P5
  }

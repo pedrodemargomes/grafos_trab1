@@ -4,72 +4,60 @@
 
 //------------------------------------------------------------------------------
 
-int numVizinhosComuns( Agnode_t *a, Agnode_t *b ){
+int numVizinhosComuns(Agraph_t *g, Agnode_t *n, Agnode_t *m ){
 	Agedge_t *e;
-	int a[1000],b[1000];
+	Agnode_t *a[1000],*b[1000];
+	
 	// Vizinhos do a
 	int i = 0;
-	for (e = agfstedge(g,a); e; e = agnxtedge(g,e,a)) {
-		sscanf(agnameof( agtail(e) ),"%d",&a[i] ); 
-		printf("%s",agnameof( agtail(e) ));
+	for (e = agfstedge(g,n); e; e = agnxtedge(g,e,n)) {
+		a[i] = agtail(e);
 		i++;
 	}
 
 	int j = 0;
 	// Vizinhos do b
-	for (e = agfstedge(g,b); e; e = agnxtedge(g,e,b)) {	
-		sscanf(agnameof( agtail(e) ),"%d",&b[j] ); 
-		printf("%s",agnameof( agtail(e) ));
-		j++
+	for (e = agfstedge(g,m); e; e = agnxtedge(g,e,m)) {	
+		b[j] = agtail(e);
+		j++;
 	}
 	int k,x;
+	int numViz = 0;
 	for(k = 0;k < i;k++) {
-		for(k = 0;k < i;k++) {
-			
+		for(x = 0;x < j;x++) {
+			if(a[k] == b[x])
+				numViz++;
 		}
 	}
 
 
+	return numViz;
 }
 
 
 int main(void) {
 
 	Agraph_t *g = agread(stdin, NULL);
+	
+	Agnode_t *c1,*c2,*n,*m;
 
-	int num_nodes = agnnodes(g);		
-	int num_cons = 9;
+	int i,j,numViz;
 
-	Agnode_t *c1,*c2;
-		
-	int i,j;
-
-	printf("%d\n", agdegree(g,p,TRUE,TRUE) );	
-	printf("%d\n", agedge(g,c,p,NULL,FALSE) );	
-
-	char str[5000];
-	for(i=1;i<=num_cons;i++) {	
-		sprintf(str,"C%d",i);	
-		c1 = agnode(g,str,FALSE);
-		for(j=i+1;j<=num_cons;j++) {			
-			sprintf(str,"C%d",j);
-			c2 = agnode(g,str,FALSE);
-			
-			numViz = numVizinhosComuns(c1,c2);	
-			if( numViz  > (agdegree(g,c1,TRUE,TRUE)-agdegree(g,c2,TRUE,TRUE)) ) {
-				// Recomenda para c2 os produtos de c1
-				
+	for (n = agfstnode(g); n; n = agnxtnode(g,n)) {	
+		if( agget(n,"tipo")[0] == 'c' ) {
+			for (m = agfstnode(g); m; m = agnxtnode(g,m)) {			
+				if( m != n && agget(m,"tipo")[0] == 'c' ) {
+					printf("Testa %s e %s\n",agnameof(n),agnameof(m));
+					numViz = numVizinhosComuns(g,n,m);	
+					if( numViz  >= (agdegree(g,n,TRUE,TRUE)-agdegree(g,m,TRUE,TRUE)) ) {
+						// Recomenda para m os produtos de n
+						printf("Recomenda os produtos de %s para o %s\n",agnameof(n),agnameof(m));	
+					}			
+				}
 			}
-			if( numViz > (agdegree(g,c2,TRUE,TRUE)-agdegree(g,c1,TRUE,TRUE)) ) {
-				// Recomenda para c1 os produtos de c2
-				
-			}
-		
 		}
-		
 	}
-
-
+	
 	//agwrite(g,stdout);
 	
 	agclose(g);
