@@ -1,0 +1,11 @@
+graph "Grafo recomendacoes" {
+	C3 -- P4;
+	C3 -- P5;
+	C7 -- P5;
+	C9 -- P4;
+	C6;
+	C1 -- P4;
+	C1 -- P5;
+	C2;
+	C5 -- P1;
+}
