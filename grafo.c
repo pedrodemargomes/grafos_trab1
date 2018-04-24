@@ -149,14 +149,18 @@ grafo recomendacoes(grafo g){
 	
 	grafo gReco = malloc(sizeof(struct grafo));
 	gReco->grafo = agopen("Grafo recomendacoes",Agundirected,NULL);
+	agattr(gReco->grafo,AGEDGE,"weight","0");
+	agattr(gReco->grafo,AGEDGE,"label","0");
 
 	Agnode_t *c1,*c2,*n,*m;
 	Agnode_t **r;
 	
 	Agnode_t *cReco;
 	Agnode_t *pReco; 
+	Agedge_t *novaAresta;
 
-	int i,j,numViz,k;
+	int i,j,numViz,k,peso;
+	char str[1000];
 	for (n = agfstnode(g->grafo); n; n = agnxtnode(g->grafo,n)) {	
 		if( agget(n,"tipo")[0] == 'c' ) {
 			for (m = agfstnode(g->grafo); m; m = agnxtnode(g->grafo,m)) {
@@ -174,7 +178,12 @@ grafo recomendacoes(grafo g){
 						while(r[k] != NULL) {
 							//printf("%s ",agnameof( r[k]) );
 							pReco = agnode(gReco->grafo,agnameof(r[k]),TRUE); // p	
-							agedge(gReco->grafo,cReco,pReco,"",TRUE);
+							novaAresta = agedge(gReco->grafo,cReco,pReco,"",TRUE);
+							strcpy(str, agget(novaAresta,"weight")); 
+							peso = atoi(str) + 1;
+							sprintf(str,"%d",peso);
+							agset(novaAresta,"weight",str);	
+							agset(novaAresta,"label",str);
 							k++;
 						}
 						//printf("\n");
