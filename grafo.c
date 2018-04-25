@@ -60,10 +60,9 @@ int numVizinhosComuns(grafo g, Agnode_t *n, Agnode_t *m){
 	return numViz;
 }
 
-Agnode_t **sub(grafo g, Agnode_t *m,Agnode_t *n) {
+void sub(grafo g, Agnode_t *m,Agnode_t *n,Agnode_t **r) {
 	Agedge_t *e;
-	Agnode_t *a[1000];
-	Agnode_t **r = calloc(1000,sizeof(Agnode_t *));
+	Agnode_t **a = malloc(g->numNodes * sizeof(Agnode_t *));
 	
 	// Vizinhos do a
 	int i = 0;
@@ -86,8 +85,8 @@ Agnode_t **sub(grafo g, Agnode_t *m,Agnode_t *n) {
 			k++;
 		}
 	}
-	
-	return r;	
+	r[k] = NULL;
+	free(a);
 }
 
 // ++++++++++++++++++++++++++++++++
@@ -153,7 +152,7 @@ grafo recomendacoes(grafo g){
 	agattr(gReco->grafo,AGEDGE,"label","0");
 
 	Agnode_t *c1,*c2,*n,*m;
-	Agnode_t **r;
+	Agnode_t **r = calloc(g->numNodes,sizeof(Agnode_t *));
 	
 	Agnode_t *cReco;
 	Agnode_t *pReco; 
@@ -173,7 +172,7 @@ grafo recomendacoes(grafo g){
 						// Recomenda para m os produtos de n
 						//printf("Recomenda os produtos de %s para o %s\n",agnameof(n),agnameof(m));
 						
-						r = sub(g,n,m);
+						sub(g,n,m,r);
 						k = 0;
 						while(r[k] != NULL) {
 							//printf("%s ",agnameof( r[k]) );
@@ -195,6 +194,8 @@ grafo recomendacoes(grafo g){
 			agnode(gReco->grafo,agnameof(n),TRUE);
 		}
 	}
+
+	free(r);
 
 	gReco->numNodes = g->numNodes;
 	return gReco;
