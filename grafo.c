@@ -150,24 +150,28 @@ grafo recomendacoes(grafo g){
 	gReco->grafo = agopen("Grafo recomendacoes",Agundirected,NULL);
 	agattr(gReco->grafo,AGEDGE,"weight","0");
 	agattr(gReco->grafo,AGEDGE,"label","0");
-
-	Agnode_t *c1,*c2,*n,*m;
+	agattr(gReco->grafo,AGNODE,"tipo","p");
+	agattr(gReco->grafo,AGNODE,"xlabel","p");
+	
+	Agnode_t *n,*m;
 	Agnode_t **r = calloc(g->numNodes,sizeof(Agnode_t *));
 	
 	Agnode_t *cReco;
 	Agnode_t *pReco; 
 	Agedge_t *novaAresta;
 
-	int i,j,numViz,k,peso;
+	int numViz,k,peso;
 	char str[1000];
-	for (n = agfstnode(g->grafo); n; n = agnxtnode(g->grafo,n)) {	
+	for (n = agfstnode(g->grafo); n; n = agnxtnode(g->grafo,n)) {
 		if( agget(n,"tipo")[0] == 'c' ) {
 			for (m = agfstnode(g->grafo); m; m = agnxtnode(g->grafo,m)) {
 				if( m != n && agget(m,"tipo")[0] == 'c' ) {
 					//printf("Testa %s e %s\n",agnameof(n),agnameof(m));
 					numViz = numVizinhosComuns(g,n,m);	
 					//printf("numViz = %d\n",numViz);
-					cReco = agnode(gReco->grafo,agnameof(m),TRUE); // c			
+					cReco = agnode(gReco->grafo,agnameof(m),TRUE); // c
+					agset(cReco,"tipo","c");
+					agset(cReco,"xlabel","c");	
 					if( numViz  >= (agdegree(g->grafo,n,TRUE,TRUE)-numViz) ) {
 						// Recomenda para m os produtos de n
 						//printf("Recomenda os produtos de %s para o %s\n",agnameof(n),agnameof(m));
@@ -191,6 +195,7 @@ grafo recomendacoes(grafo g){
 				}
 			}
 		} else {
+			// p
 			agnode(gReco->grafo,agnameof(n),TRUE);
 		}
 	}

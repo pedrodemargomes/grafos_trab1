@@ -1,0 +1,21 @@
+graph "Grafo recomendacoes" {
+	node [tipo=p,
+		xlabel=p
+	];
+	edge [label=0,
+		weight=0
+	];
+	C2	 [tipo=c,
+		xlabel=c];
+	C3	 [tipo=c,
+		xlabel=c];
+	C3 -- P2	 [label=2,
+		weight=2];
+	C4	 [tipo=c,
+		xlabel=c];
+	C1	 [tipo=c,
+		xlabel=c];
+	C1 -- P2	 [label=2,
+		weight=2];
+	P1;
+}
